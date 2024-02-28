@@ -3,6 +3,7 @@ package fr.qui.eco_gestion_back_office.security;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -32,6 +33,8 @@ public class SecurityConfig {
     private final AuthEntryPointJwt unauthorizedHandler; 
     private final JwtUtils jwtUtils;
     private final CustomUtilisateurDetailsService customUtilisateurDetailsService;
+    @Value("${app.cors.origin}")
+    private String allowedOrigins;
 
     
     public SecurityConfig(AuthEntryPointJwt unauthorizedHandler, JwtUtils jwtUtils, CustomUtilisateurDetailsService customUtilisateurDetailsService) {
@@ -65,7 +68,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource()
     {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
 configuration.setAllowedHeaders(List.of("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
