@@ -12,5 +12,7 @@ import fr.qui.eco_gestion_back_office.utilisateur.Utilisateur;
 public interface TagRepository extends JpaRepository<Tag, Long> {
 	
 	List<Tag> findByMouvements_Utilisateur(Utilisateur utilisateur);
+	
+	
 
 }
