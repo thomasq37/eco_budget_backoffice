@@ -22,11 +22,6 @@ public class MouvementService {
     	this.mouvementRepository = mouvementRepository;
     	this.utilisateurRepository = utilisateurRepository;
     }
-
-    public List<Mouvement> findAll() {
-        return mouvementRepository.findAll();
-    }
-    
     public List<Mouvement> obtenirMouvements(String email) {
         Utilisateur utilisateur = utilisateurRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur non trouvé"));
@@ -45,6 +40,14 @@ public class MouvementService {
         });
 
         return mouvements; // Retourner la liste des mouvements après les avoir enregistrés
+    }
+
+    public Mouvement ajouterMouvement(Mouvement mouvement, String email) {
+        // Trouver l'utilisateur pour s'assurer que les mouvements lui appartiennent
+        Utilisateur utilisateur = utilisateurRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur non trouvé"));
+        mouvement.setUtilisateur(utilisateur); // Assurez-vous que votre entité Mouvement a un champ pour l'utilisateur et des setters appropriés
+        return mouvementRepository.save(mouvement);
     }
 
     /*public Optional<Mouvement> findById(Long id) {

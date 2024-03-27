@@ -49,7 +49,21 @@ public class MouvementController {
             return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
         }
     }
-   
+
+    @PostMapping("/ajouter")
+    public ResponseEntity<?> ajouterMouvement(@RequestBody Mouvement mouvement) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        try {
+            // Ici, on ajoute les mouvements pour l'utilisateur spécifié par email
+            // La logique exacte dépend de votre implémentation de service
+            Mouvement mouvementAdded = mouvementService.ajouterMouvement(mouvement, email);
+            return ResponseEntity.ok().body(mouvementAdded);
+
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+        }
+    }
 
     /*@GetMapping("/{id}")
     public ResponseEntity<Mouvement> getMouvementById(@PathVariable Long id) {
@@ -58,10 +72,7 @@ public class MouvementController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<Mouvement> createMouvement(@RequestBody Mouvement mouvement) {
-        return ResponseEntity.ok(mouvementService.save(mouvement));
-    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Mouvement> updateMouvement(@PathVariable Long id, @RequestBody Mouvement mouvementDetails) {
