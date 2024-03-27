@@ -6,12 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -64,6 +60,34 @@ public class MouvementController {
             return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
         }
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateMouvement(@PathVariable Long id, @RequestBody Mouvement mouvementDetails) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        try {
+            // Ici, on ajoute les mouvements pour l'utilisateur spécifié par email
+            // La logique exacte dépend de votre implémentation de service
+            Mouvement updatedMouvement = mouvementService.update(id, mouvementDetails, email);
+            return ResponseEntity.ok().body(updatedMouvement);
+
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+        }
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteMouvement(@PathVariable Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        try {
+            mouvementService.deleteById(id, email);
+            return ResponseEntity.ok().build();
+
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+        }
+
+    }
 
     /*@GetMapping("/{id}")
     public ResponseEntity<Mouvement> getMouvementById(@PathVariable Long id) {
@@ -74,17 +98,8 @@ public class MouvementController {
 
 
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Mouvement> updateMouvement(@PathVariable Long id, @RequestBody Mouvement mouvementDetails) {
-    	  Mouvement updatedMouvement = mouvementService.update(id, mouvementDetails);
-          return ResponseEntity.ok(updatedMouvement);
-    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMouvement(@PathVariable Long id) {
-        mouvementService.deleteById(id);
-        return ResponseEntity.ok().build();
-    }*/
+  */
     
  
 }
